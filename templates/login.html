@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Личный кабинет</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+    input {
+        display: block;
+        font-size: 18px;
+        padding: 15px;
+        margin-bottom: 10px;
+        outline: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+    form {
+        width: 90%;
+        min-width: 250px;
+        max-width: 350px;
+    }
+    body {
+        margin: 0; padding: 0px;
+        width: 100%;
+        height: 100%;
+        display: flex; 
+        flex-direction: column;
+        align-items: center;
+        background-color: ghostwhite;
+    }
+    .placeholder{
+        flex: 1;
+    }
+    </style>
+<script type="text/javascript">
+    // document глобальный обьект в js который инкапсулирует html страницу
+    // addEventListener обработчик события
+    // событие DOMContentLoaded т.е. страница загружена
+    // следовательно выполняем слудующую функцию 
+    document.addEventListener("DOMContentLoaded", function(){
+        let btn = document.querySelector('input[type=submit]');
+        // let обьявление перемменнной, ищем кнопку
+        btn.addEventListener('click', async function(event){
+            event.preventDefault(); // предотвращаем перезагрузку страницы
+            // метод preventDefault обьекта event
+            let username = document.querySelector('input[name=username]').value;
+            // переменная username найденного поля ввода по css селектору
+            let password = document.querySelector('input[name=password]').value;
+            // переменная password найденного поля ввода по css  селектору
+            // console.log(username, password) выводим в консоль
+            let response = await fetch("/login", {
+            // response обьект ответа для отправки данных на сервер
+            // в URI '/login' методом await функции fetch
+                method: "POST",
+                // http метод
+                headers: {'Content-Type': 'application/json'},
+                body: `{"username": "${username}", "password": "${password}"}`
+                // данные в сыром виде в поле http запроса
+
+                // body: new FormData(document.querySelector('form'))
+                // посылаем данные из поля form в блок FormData http POST запроса
+            });
+            let response_json = await response.json();
+            // сохраняем ответ от сервера
+            if (response_json.success){
+                let body = document.querySelector('body');
+                body.style.backgroundColor = "white";
+                body.style.display = "block";
+                body.innerHTML = response_json.message;
+            }
+            // console.log('response text is', response_text);
+        }) 
+        // добавляем обработчик события к кнопке
+    })
+
+
+
+</script>
+
+
+</head>
+
+<body>
+    <div class="placeholder"></div>
+    <form method="POST"action="/login">
+        <input type="text" name="username" />
+        <input type="password" name="password" />
+        <input type="submit" value="Войти" />
+    </form>
+    <div class="placeholder"></div>
+   
+</body>
+
+</html>
