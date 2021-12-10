@@ -1,4 +1,3 @@
-# FastAPI server
 import hmac
 import base64
 import hashlib
